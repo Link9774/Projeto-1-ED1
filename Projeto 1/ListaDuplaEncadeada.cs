@@ -58,6 +58,48 @@ public void Remove(string data)
     }
 }
 
+public void RemoveAt(int index)
+{
+    if(head == null) return;
+
+    DoubleNode current = head;
+    int count = 0;
+     while (current != null)
+        {
+            if (count == index)
+            {
+                if (current == head)
+                {
+                    head = current.Next;
+                    if (head != null) head.Previous = null;
+                }
+                else if (current == tail)
+                {
+                    tail = current.Previous;
+                    if (tail != null) tail.Next = null;
+                }
+                else
+                {
+                    current.Previous.Next = current.Next;
+                    if (current.Next != null)
+                    {
+                        current.Next.Previous = current.Previous;
+                    }
+                }
+                return;
+            }
+            current = current.Next;
+            count++;
+        }
+}
+public void Clear()
+{
+    head = null;
+    tail = null;
+}
+
+
+
 public void DisplayDireita()
 {
     DoubleNode current = head;

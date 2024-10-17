@@ -9,6 +9,76 @@ class CircularLinkedList
         tail = null;
     }
 
+    
+    public void RemoveAt(int index)
+{
+    if (head == null || index < 0) 
+    {
+        Console.WriteLine("Índice fora do intervalo ou lista vazia.");
+        return;
+    }
+    if (index == 0)
+    {
+        if (head == tail)
+        {
+            head = null;
+            tail = null;
+        }
+        else
+        {
+            head = head.Next;
+            tail.Next = head;
+        }
+        return;
+    }
+
+    Node current = head;
+    int count = 0;
+
+    do
+    {
+        if (count == index - 1)
+        {
+            if (current.Next == tail)
+            {
+                tail = current;
+                tail.Next = head;
+            }
+            else
+            {
+                current.Next = current.Next.Next;
+            }
+            return;
+        }
+
+        current = current.Next;
+        count++;
+    } while (current != head);
+
+    Console.WriteLine("Índice fora do intervalo.");
+}
+    
+    public string GetAt(int index)
+{
+    if (head == null || index < 0) 
+    {
+        return null;
+    }
+
+    Node current = head;
+    int count = 0;
+    do
+    {
+        if (count == index)
+        {
+            return current.Data;
+        }
+        current = current.Next;
+        count++;
+    } while (current != head);
+
+    return null;
+}
     public void Add(string data)
     {
         Node newNode = new Node(data);

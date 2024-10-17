@@ -39,7 +39,44 @@ class LinkedList
             current.Next = newNode;
         }
     }
+    public void RemoveAt(int index)
+{
+    if (head == null) return;
 
+    if (index == 0)
+    {
+        head = head.Next;
+        return;
+    }
+    Node current = head;
+    int count = 0;
+
+    while (current != null && count < index - 1)
+    {
+        current = current.Next;
+        count++;
+    }
+    if (current == null || current.Next == null)
+    {
+        Console.WriteLine("Índice fora dos limites.");
+        return;
+    }
+    current.Next = current.Next.Next;
+}
+   
+   public bool Contains(string data)
+{
+    Node current = head;
+    while (current != null)
+    {
+        if (current.Data == data)
+        {
+            return true;
+        }
+        current = current.Next;
+    }
+    return false;
+}
     public void Remove(string data)
     {
         if (head == null) return;
@@ -98,6 +135,11 @@ class LinkedList
         return null;
     }
 
+    public void Clear()
+    {
+        head = null;
+    }
+    
     public int Count(){
     
         Node current = head;
