@@ -1,7 +1,7 @@
-class CircularLinkedList
+class CircularLinkedList<T>
 {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
 
     public CircularLinkedList()
     {
@@ -32,7 +32,7 @@ class CircularLinkedList
         return;
     }
 
-    Node current = head;
+    Node<T> current = head;
     int count = 0;
 
     do
@@ -58,14 +58,14 @@ class CircularLinkedList
     Console.WriteLine("Índice fora do intervalo.");
 }
     
-    public string GetAt(int index)
+    public T GetAt(int index)
 {
     if (head == null || index < 0) 
     {
-        return null;
+        return default(T);
     }
 
-    Node current = head;
+    Node<T> current = head;
     int count = 0;
     do
     {
@@ -77,11 +77,11 @@ class CircularLinkedList
         count++;
     } while (current != head);
 
-    return null;
+    return default(T);
 }
-    public void Add(string data)
+    public void Add(T data)
     {
-        Node newNode = new Node(data);
+        Node<T> newNode = new Node<T>(data);
 
         if (head == null)
         {
@@ -104,7 +104,7 @@ class CircularLinkedList
             return;
         }
 
-        Node current = head;
+        Node<T> current = head;
         do
         {
             Console.WriteLine(current.Data);
@@ -115,7 +115,7 @@ class CircularLinkedList
     {
         if (head == null) return;
 
-        if (head.Data == data)
+        if (head.Data.Equals(data))
         {
             if (head == tail)
             {
@@ -130,10 +130,10 @@ class CircularLinkedList
             return;
         }
 
-        Node current = head;
+        Node<T> current = head;
         do
         {
-            if (current.Next.Data == data)
+            if (current.Next.Data.Equals(data))
             {
                 if (current.Next == tail)
                 {
@@ -154,7 +154,7 @@ class CircularLinkedList
     {
         if (head == null) return 0;
 
-        Node current = head;
+        Node<T> current = head;
         int count = 0;
         do
         {
@@ -165,9 +165,9 @@ class CircularLinkedList
         return count;
     }
 
-    public void InsertAt(int index, string data)
+    public void InsertAt(int index, T data)
     {
-        Node newNode = new Node(data);
+        Node<T> newNode = new Node<T>(data);
 
         if (index == 0)
         {
@@ -186,7 +186,7 @@ class CircularLinkedList
         }
         else
         {
-            Node current = head;
+            Node<T> current = head;
             int count = 0;
 
             do

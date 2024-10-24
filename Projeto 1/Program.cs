@@ -1,33 +1,22 @@
-﻿
- class Program
+﻿ class Program
  {
     static string welcome = "Bem vindo ao HealthMax, nosso aplicativo de gestão clínica";
 
-    static LinkedList listaMedicos = new LinkedList();
-    static LinkedList listaEspecializacao = new LinkedList();
-    static LinkedList listaDisponibilidade = new LinkedList();
+    static LinkedList<Medico> listaMedicos = new LinkedList<Medico>();
 
-    static LinkedList listaPacientes = new LinkedList();
-    static LinkedList listaIdade = new LinkedList();
-    static LinkedList listaHistorico = new LinkedList();
-    static LinkedList listaUltimaConsulta = new LinkedList();
+    static LinkedList<Paciente> listaPacientes = new LinkedList<Paciente>();
+   
+    static LinkedList<Mesa> listaMesas = new LinkedList<Mesa>();
     
-    static DoubleLinkedList listaMesas = new DoubleLinkedList();
-    static LinkedList listaClientes = new LinkedList();
-    static LinkedList listaStatus = new LinkedList();
-    static LinkedList listaItem = new LinkedList();
-    static DoubleLinkedList listaQuantidade = new DoubleLinkedList();
-    static DoubleLinkedList listaValor = new DoubleLinkedList();
+    // static void InicializarMesas()
+    // {
+    //     for (int i = 1; i <= 5; i++)
+    //     {
+    //         listaMesas.Add(new Mesas(i));
+    //     }
+    // }
     
-    static LinkedList listaEventos = new LinkedList();
-    static CircularLinkedList listaDataEvento = new CircularLinkedList();
-    static LinkedList listaLocal = new LinkedList();
-    static LinkedList listaCapacidade = new LinkedList();
-    
-    static LinkedList listaParticipantes = new LinkedList();
-    static DoubleLinkedList listNumParticipante = new DoubleLinkedList();
-    static LinkedList listParticipanteEvento = new LinkedList();
-    static Dictionary<int, string> participantesEventos = new Dictionary<int, string>();
+       static Dictionary<int, string> participantesEventos = new Dictionary<int, string>();
     static void ExibirLogo()
     {
         Console.WriteLine(@" ＨｅａｌｔｈＭａｘ");
@@ -102,26 +91,27 @@
         }
     }
 
-    static void RegistrarMedicos()
+     static void RegistrarMedicos()
     {
         Console.Clear();
         Console.Write("Digite o nome e o sobrenome do médico: ");
 
         string nomeDoMedico = Console.ReadLine();
-        listaMedicos.Add(nomeDoMedico);
-
-        Console.WriteLine($"O médico {nomeDoMedico} foi registrado");
-
+        
         Console.Write("Digite a especialidade do médico: ");
         string especialidade = Console.ReadLine();
-        listaEspecializacao.Add(especialidade);
-        Console.WriteLine($"Especialização {especialidade} registrada");
 
         Console.Write("Digite a disponibilidade do médico: ");
         string disponibilidade = Console.ReadLine();
-        listaDisponibilidade.Add(disponibilidade);
-        Console.WriteLine($"Disponibilidade {disponibilidade} registrada");
 
+        Medico novoMedico = new Medico(nomeDoMedico, especialidade, disponibilidade);
+        
+        
+        listaMedicos.Add(novoMedico); 
+       
+        Console.WriteLine($"\nO médico {nomeDoMedico} foi registrado com sucesso");
+        Console.WriteLine($"Especialização {especialidade}");
+        Console.WriteLine($"Disponibilidade: {disponibilidade}");
         RegistroMedicos();
     }
     static void MostrarListaDeMedicos()
@@ -133,7 +123,8 @@
 
         for (int i = 0; i < listaMedicos.Count(); i++)
         {
-            Console.WriteLine($"Médico: {listaMedicos.GetAt(i)} | Especialidade: {listaEspecializacao.GetAt(i)} | Disponibilidade: {listaDisponibilidade.GetAt(i)}");
+            Medico medico = listaMedicos.GetAt(i);
+            Console.WriteLine($"Médico: {medico.Nome} | Especialidade: {medico.Especialidade} |");
         }
 
         Console.WriteLine("\nPrecione qualquer tecla para voltar ao menu de médicos");
@@ -146,20 +137,27 @@
         Console.Clear();
         Console.WriteLine("Digite o nome do médico que deseja remover");
         string nomeDoMedico = Console.ReadLine();
+        
+        Medico medicoEncontrado = null;
 
-        int index = listaMedicos.IndexOf(nomeDoMedico);
-        if (index != -1)
+        for(int i = 0; i < listaMedicos.Count();i++)
         {
-            listaMedicos.Remove(nomeDoMedico);
-            listaEspecializacao.Remove(listaEspecializacao.GetAt(index));
-            listaDisponibilidade.Remove(listaDisponibilidade.GetAt(index));
+            Medico medico = listaMedicos.GetAt(i);
+            if(medico.Nome.Equals(nomeDoMedico, StringComparison.OrdinalIgnoreCase))
+            {
+                medicoEncontrado = medico;
+                break;
+            }
+        }
+        if (medicoEncontrado != null)
+        {
+            listaMedicos.Remove(medicoEncontrado);
             Console.WriteLine($"\nMédico {nomeDoMedico} removido com sucesso");
         }
         else
         {
-            Console.WriteLine($"\nMédico {nomeDoMedico} não encontrado");
+            Console.WriteLine("$\nMédico {nomeDoMedico} não encontrado");
         }
-
         Console.WriteLine("Pressione qualquer tecla para voltar ao menu de médicos");
         Console.ReadKey();
         RegistroMedicos();
@@ -171,9 +169,12 @@
     
         bool medicoEncontrado = false;
         for (int i = 0;i < listaMedicos.Count();i++){
-            if (listaEspecializacao.GetAt(i).Equals(especialidade,StringComparison.OrdinalIgnoreCase)){
-                 Console.WriteLine($"Médico: {listaMedicos.GetAt(i)} | Especialidade: {listaEspecializacao.GetAt(i)} | Disponibilidade: {listaDisponibilidade.GetAt(i)}");
-                medicoEncontrado = true;        
+            
+            Medico medico = listaMedicos.GetAt(i);
+            
+            if (medico.Especialidade.Equals(especialidade, StringComparison.OrdinalIgnoreCase)){
+                 Console.WriteLine($"Médico: {medico.Nome} | Especialidade: {medico.Especialidade} | Disponibilidade: {medico.Disponibilidade}");
+                 medicoEncontrado = true;        
             }
 
         }
@@ -210,15 +211,14 @@
                 Menu();
                 break; 
         }
-    void RegistrarPaciente(){
+   static void RegistrarPaciente(){
         Console.Clear();
         Console.WriteLine("Digite o nome e sobrenome do paciente");
 
         string nomePaciente = Console.ReadLine();
-        listaPacientes.Add(nomePaciente);
-        Console.WriteLine($"O paciente {nomePaciente} foi registrado");
+        
 
-        int idadePaciente; 
+        int idadePaciente = 0; 
         bool idadeValida = false;
        
         while(!idadeValida)
@@ -228,21 +228,18 @@
         
             if(int.TryParse(idadePacienteS, out idadePaciente)){
                 idadeValida = true;
-                listaIdade.Add(idadePacienteS);
-                Console.WriteLine($"Idade {idadePacienteS} foi registrada");
             }else{
                 Console.WriteLine("Digite uma idade valida");
             }
         }
         Console.WriteLine("Digite o historico medico do paciente");        
         string historicoMedico = Console.ReadLine();
-        listaHistorico.Add(historicoMedico);
-        Console.WriteLine($"{historicoMedico} foi registrado");
         
         bool dataValida = false;
-    DateTime dataConsulta;
+        DateTime dataConsulta = DateTime.MinValue ;
 
-    while (!dataValida){
+        while (!dataValida)
+        {
     
         Console.WriteLine("Digite a data da consulta (dd/MM/yyyy)");        
         string dataConsultaS = Console.ReadLine();
@@ -250,14 +247,17 @@
         if (DateTime.TryParseExact(dataConsultaS, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dataConsulta)){
         
             dataValida = true;
-            listaUltimaConsulta.Add(dataConsultaS);
-            Console.WriteLine($"{dataConsultaS} foi registrado");
         }
         else{
             Console.WriteLine("Digite uma data válida no formato dd/MM/yyyy");
-        }
-        RegistroPacientes();
+        }        
     }
+    Paciente novoPaciente = new Paciente(nomePaciente,idadePaciente,historicoMedico,dataConsulta);
+    listaPacientes.Add(novoPaciente);
+    
+    Console.WriteLine($"\nPaciente {nomePaciente} registrado com sucesso");
+
+    RegistroPaciente();
 
     }
     static void RegistroPaciente(){
@@ -266,8 +266,10 @@
         Console.WriteLine("Exibindo registro de pacientes");
         Console.WriteLine("*******************************");
 
-        for(int i = 0; i < listaPacientes.Count();i++){
-            Console.WriteLine($"Paciente: {listaPacientes.GetAt(i)} | Idade: {listaIdade.GetAt(i)} | Historico medico: {listaHistorico.GetAt(i)} | Ultima consulta: {listaUltimaConsulta.GetAt(i)}");
+        for(int i = 0; i < listaPacientes.Count();i++)
+        {
+            Paciente paciente = listaPacientes.GetAt(i);
+            Console.WriteLine($"Paciente: {paciente.Nome} | Idade: {paciente.Idade} | Histórico: {paciente.HistoricoMedico} | Data da última consulta: {paciente.DataConsulta:dd/MM/yyyy}");
         }
         Console.WriteLine("\nPrecione qualquer tecla para voltar ao menu de pacientes");
         Console.ReadKey();
@@ -277,56 +279,67 @@
         Console.Clear();
         Console.WriteLine("Digite o nome do paciente para agendar uma nova consulta:");
         string nomePaciente = Console.ReadLine();
-        int index = listaPacientes.IndexOf(nomePaciente);
-        if(index != -1){
-            bool dataValida = false;
-            DateTime novaDataConsulta;
+        
+        for(int i = 0; i < listaPacientes.Count(); i++)
+        {
+            Paciente paciente = listaPacientes.GetAt(i);
+        
+            if(paciente.Nome.Equals(nomePaciente, StringComparison.OrdinalIgnoreCase))
+            {
+                bool dataValida = false;
+                DateTime novaDataConsulta;
 
-            while (!dataValida){
-                Console.WriteLine("Digite a nova data da consulta (dd/MM/yyyy:)");
-                string novaDataConsultaS = Console.ReadLine();
-                if(DateTime.TryParseExact(novaDataConsultaS, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out novaDataConsulta)){
-                    dataValida = true;
-                    listaUltimaConsulta.ReplaceAt(index, novaDataConsultaS);
+                while(!dataValida)
+                {
+                    Console.WriteLine("Digite a nova data da consulta (dd/MM/yyyy)");
+                    string novaDataConsultaS = Console.ReadLine();
 
-                    Console.WriteLine($"A nova data da consulta para {nomePaciente} foi registrada");
-                    RegistroPacientes();
-                }else{
-                    Console.WriteLine("Digite uma data válida no formato dd/MM/yyyy.");
+                    if(DateTime.TryParseExact(novaDataConsultaS,"dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out novaDataConsulta))
+                    {
+                        paciente.DataConsulta = novaDataConsulta;
+                        Console.WriteLine($"A nova data da consulta para {paciente.Nome} foi registrada com sucesso: {paciente.DataConsulta:dd/MM/yyyy}");
+                        return;
+                    }
+                    else 
+                    {
+                        Console.WriteLine("Digite uma data válida no formato dd/MM/yyyy.");
+                    }
                 }
             }
-        
-        }else {
-            Console.WriteLine($"Paciente {nomePaciente} não encontrado");
-            AgendarConsulta();
         }
-
+        Console.WriteLine($"Paciente {nomePaciente} não encontrado.");
+        Console.WriteLine("Pressione qualquer tecla para voltar ao menu de pacientes");
+        Console.ReadKey();
+        RegistroPacientes();
     }
     static void RemoverPaciente(){
         Console.Clear();
         Console.WriteLine("Digite o nome do paciente que deseja remover");
         string nomePaciente = Console.ReadLine();
 
-        int index = listaPacientes.IndexOf(nomePaciente);
-        if (index != -1)
+        Paciente pacienteARemover = null;
+        for (int i = 0; i< listaPacientes.Count(); i++)
         {
-            listaPacientes.Remove(nomePaciente);
-            listaIdade.Remove(listaIdade.GetAt(index));
-            listaHistorico.Remove(listaHistorico.GetAt(index));
-            listaUltimaConsulta.Remove(listaUltimaConsulta.GetAt(index));
-            Console.WriteLine($"\nPaciente {nomePaciente} removido com sucesso");
+            if(listaPacientes.GetAt(i).Nome.Equals(nomePaciente, StringComparison.OrdinalIgnoreCase))
+            {
+                pacienteARemover = listaPacientes.GetAt(i);
+                break;
+            }
+    }
+        if (pacienteARemover != null)
+    {
+       listaPacientes.Remove(pacienteARemover); 
+       Console.WriteLine($"\nPaciente {nomePaciente} removido com sucesso"); 
         }
-        else
+     else 
         {
-            Console.WriteLine($"\nPaciente {nomePaciente} não encontrado");
+        Console.WriteLine($"\nPaciente {nomePaciente} não encontrado");
         }
-
         Console.WriteLine("Pressione qualquer tecla para voltar ao menu de pacientes");
         Console.ReadKey();
         RegistroPacientes();
-    }
-
-    }
+}
+    
     static void MenuRestaurante()
     {
         Console.Clear();
@@ -355,34 +368,27 @@
   static void GerenciarMesa()
   {
         Console.Clear();
-        int numMesa; 
-        bool numvalido = false;
+        int numMesa = 0; 
+        bool numValido = false;
        
-        while(!numvalido){
-        Console.WriteLine("Digite o numero da mesa");    
+        while(!numValido)
+        {
+        Console.WriteLine("Digite o número da mesa");    
         string numMesaS = Console.ReadLine();
         
-            if(int.TryParse(numMesaS, out numMesa))
-            {
-                numvalido = true;
-                listaMesas.Add(numMesaS);
-                Console.WriteLine($"Mesa {numMesaS} foi registrada");
+            if(int.TryParse(numMesaS, out numMesa)){
+                numValido = true;
             }else{
-                Console.WriteLine("Digite um numero valida");
+                Console.WriteLine("Digite um número válido");
             }
         }
-        Console.WriteLine("Digite o nome e sobrenome do cliente");
-
-        string nomeCliente = Console.ReadLine();
-        listaClientes.Add(nomeCliente);
-        Console.WriteLine($"O cliente {nomeCliente} foi registrado");
+    Console.WriteLine("Digite o nome e sobrenome do cliente");    
+         string nomeCliente = Console.ReadLine();
+    Console.WriteLine("Digite o status da mesa");   
+         string status = Console.ReadLine();
     
-        Console.WriteLine("Digite o status da mesa");
-
-        string status = Console.ReadLine();
-        listaStatus.Add(status);
-        Console.WriteLine($"Status {status} registrado");
-        MenuRestaurante();
+    Mesa novaMesa = new Mesa(numMesa,nomeCliente,status);
+    listaMesas.Add(novaMesa);
   }
     static void MostrarMesas()
     {
@@ -391,8 +397,9 @@
         Console.WriteLine("Exibindo Mesas");
         Console.WriteLine("*****************");
     
-        for(int i = 0; i < listaMesas.Count();i++){
-            Console.WriteLine($"Mesa: {listaMesas.GetAt(i)} | Cliente: {listaClientes.GetAt(i)} | Status: {listaStatus.GetAt(i)}");
+        for(int i = 1; i < 6;i++){
+             Mesa mesa = listaMesas.GetAt(i);
+            Console.WriteLine($"Mesa: {mesa.NumMesa} | Cliente: {mesa.NomeCliente} | Status: {mesa.Status}");
         }
         Console.WriteLine("\nPrecione qualquer tecla para voltar ao menu do restaurante");
         Console.ReadKey();
@@ -403,7 +410,7 @@
     Console.Clear();
 
     Console.WriteLine("Digite o número da mesa para registrar o pedido:");
-    string numMesa = Console.ReadLine();
+     numMesa = Console.ReadLine();
 
     int indexMesa = listaMesas.IndexOf(numMesa);
     if (indexMesa == -1)
@@ -776,4 +783,5 @@ Console.Clear();
         ExibirLogo();
         Menu();
     }
+} 
 }
