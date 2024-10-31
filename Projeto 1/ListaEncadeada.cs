@@ -1,37 +1,38 @@
 //Projeto-1
+using System.Collections;
 
 
-class Node
+class Node<T>
 {
-    public string Data;
-    public Node Next;
+    public T Data;
+    public Node<T> Next;
 
-    public Node(string data)
+    public Node(T data)
     {
         Data = data;
         Next = null;
     }
 }
 
-class LinkedList
+class LinkedList<T> : IEnumerable<T>
 {
-    private Node head;
+    private Node<T> head;
 
     public LinkedList()
     {
         head = null;
     }
 
-    public void Add(string data)
+    public void Add(T data)
     {
-        Node newNode = new Node(data);
+        Node<T> newNode = new Node<T>(data);
         if (head == null)
         {
             head = newNode;
         }
         else
         {
-            Node current = head;
+            Node<T> current = head;
             while (current.Next != null)
             {
                 current = current.Next;
@@ -48,7 +49,7 @@ class LinkedList
         head = head.Next;
         return;
     }
-    Node current = head;
+    Node<T> current = head;
     int count = 0;
 
     while (current != null && count < index - 1)
@@ -64,12 +65,12 @@ class LinkedList
     current.Next = current.Next.Next;
 }
    
-   public bool Contains(string data)
+   public bool Contains(T data)
 {
-    Node current = head;
+    Node<T> current = head;
     while (current != null)
     {
-        if (current.Data == data)
+        if (current.Data.Equals(data))
         {
             return true;
         }
@@ -77,18 +78,18 @@ class LinkedList
     }
     return false;
 }
-    public void Remove(string data)
+    public void Remove(T data)
     {
         if (head == null) return;
 
-        if (head.Data == data)
+        if (head.Data.Equals(data))
         {
             head = head.Next;
             return;
         }
 
-        Node current = head;
-        while (current.Next != null && current.Next.Data != data)
+        Node<T> current = head;
+        while (current.Next != null && !current.Next.Data.Equals(data))
         {
             current = current.Next;
         }
@@ -101,7 +102,7 @@ class LinkedList
 
     public void Display()
     {
-        Node current = head;
+        Node<T> current = head;
         while (current != null)
         {
             Console.WriteLine(current.Data);
@@ -109,22 +110,22 @@ class LinkedList
         }
     }
 
-    public int IndexOf(string data)
+    public int IndexOf(T data)
     {
-        Node current = head;
+        Node<T> current = head;
         int index = 0;
         while (current != null)
         {
-            if (current.Data == data) return index;
+            if (current.Data.Equals(data)) return index;
             current = current.Next;
             index++;
         }
         return -1;
     }
 
-    public string GetAt(int index)
+    public T GetAt(int index)
     {
-        Node current = head;
+        Node<T> current = head;
         int count = 0;
         while (current != null)
         {
@@ -132,7 +133,7 @@ class LinkedList
             current = current.Next;
             count++;
         }
-        return null;
+        return default(T);
     }
 
     public void Clear()
@@ -142,7 +143,7 @@ class LinkedList
     
     public int Count(){
     
-        Node current = head;
+        Node<T> current = head;
         int count = 0;
         while (current != null){
         
@@ -151,11 +152,10 @@ class LinkedList
         }
         return count;
     }
-    public void ReplaceAt(int index, string newData){
-        if(head == null){
-            return;
-        }
-        Node current = head;
+    public void ReplaceAt(int index, T newData){
+        if(head == null)return;
+            
+        Node<T> current = head;
         int count = 0;
 
         while (current != null){
@@ -167,5 +167,21 @@ class LinkedList
             count++;
         }
     }
+public IEnumerator<T> GetEnumerator()
+    {
+        Node<T> current = head;
+        while (current != null)
+        {
+            yield return current.Data;
+            current = current.Next;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }    
+
+
 
 }

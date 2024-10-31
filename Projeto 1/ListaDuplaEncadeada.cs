@@ -1,24 +1,24 @@
-class DoubleNode
+class DoubleNode<T>
 {
-    public string Data;
-    public DoubleNode Next;
-    public DoubleNode Previous;
+    public T Data;
+    public DoubleNode<T> Next;
+    public DoubleNode<T> Previous;
 
-    public DoubleNode(string data)
+    public DoubleNode(T data)
     {
         Data = data;
         Next = null;
         Previous = null;
     }
 }
-class DoubleLinkedList
-{
-    private DoubleNode head;
-    private DoubleNode tail;
+class DoubleLinkedList<T>
+{ 
+    private DoubleNode<T> head;
+    private DoubleNode<T> tail;
 
-    public void Add(string data)
+    public void Add(T data)
     {
-    DoubleNode newNode = new DoubleNode(data);
+    DoubleNode<T> newNode = new DoubleNode<T>(data);
     if (head == null)
         {
             head = newNode;
@@ -29,15 +29,15 @@ class DoubleLinkedList
             tail = newNode;
             }
     }
-public void Remove(string data)
+public void Remove(T data)
 {
     if(head == null) return;
 
-    DoubleNode current = head;
+    DoubleNode<T> current = head;
 
     while(current != null)
     {
-       if(current.Data == data)
+       if(current.Data.Equals(data))
        {
             if(current == head)
             {
@@ -62,7 +62,7 @@ public void RemoveAt(int index)
 {
     if(head == null) return;
 
-    DoubleNode current = head;
+    DoubleNode<T> current = head;
     int count = 0;
      while (current != null)
         {
@@ -102,7 +102,7 @@ public void Clear()
 
 public void DisplayDireita()
 {
-    DoubleNode current = head;
+    DoubleNode<T> current = head;
     while (current != null)
     {
         Console.WriteLine(current.Data);
@@ -111,7 +111,7 @@ public void DisplayDireita()
 }
 public void DisplayEsquerda()
 {
-    DoubleNode current = tail;
+    DoubleNode<T> current = tail;
     while (current != null)
     {
         Console.WriteLine(current.Data);
@@ -121,11 +121,11 @@ public void DisplayEsquerda()
 }
 public int IndexOf(string data)
 {
-    DoubleNode current = head;
+    DoubleNode<T> current = head;
     int index = 0;
     while (current != null)
     {
-        if (current.Data == data)
+        if (current.Data.Equals(data))
         
             return index;
                 current = current.Next;
@@ -133,9 +133,9 @@ public int IndexOf(string data)
         }
         return -1;
     }
-    public string GetAt(int index)
+    public T GetAt(int index)
     {
-        DoubleNode current = head;
+        DoubleNode<T> current = head;
         int count = 0;
         while(current != null)
         {
@@ -144,12 +144,12 @@ public int IndexOf(string data)
             current = current.Next;
             count++;
         }
-        return null;
+        return default(T);
     }   
     
     public int Count()
     {
-        DoubleNode current = head;
+        DoubleNode<T> current = head;
         int count = 0;
         while (current != null)
         {
@@ -158,9 +158,9 @@ public int IndexOf(string data)
         }
         return count;
     }
-    public void ReplaceAt(int index, string newData)
+    public void ReplaceAt(int index, T newData)
     {
-        DoubleNode current = head;
+        DoubleNode<T> current = head;
         int count = 0;
         while (current != null)
         {
